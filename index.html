@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pumpline</title>
+<meta name="description" content="Nearby gas prices, one-photo pump scans, and fuel spend tracking.">
+<meta name="theme-color" content="#F4F1EC">
+<meta property="og:title" content="Pumpline">
+<meta property="og:description" content="Nearby gas prices, one-photo pump scans, and fuel spend tracking.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1EC; --hi:#FFFFFF; --lo:#E4DFD7; --well:#EDE9E2;
+  --ink:#2B2724; --ink-2:#5E5750; --accent:#C21F1A; --accent-2:#E23A2E; --accent-ink:#A8170F;
+  --lift:-8px -8px 18px rgba(255,255,255,.85),8px 8px 20px rgba(170,160,145,.5);
+  --lift-sm:-4px -4px 9px rgba(255,255,255,.85),4px 4px 10px rgba(170,160,145,.45);
+  --sink:inset 5px 5px 10px rgba(170,160,145,.5),inset -5px -5px 10px rgba(255,255,255,.9);
+  --glow:0 10px 24px rgba(194,31,26,.38),inset 0 1px 1px rgba(255,255,255,.45);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100dvh;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em;text-decoration:none}
+.brand img{width:36px;height:36px;border-radius:10px;box-shadow:0 4px 10px rgba(194,31,26,.3)}
+.tag{font-size:13px;font-weight:700;color:var(--ink-2);padding:8px 14px;border-radius:20px;background:var(--well);box-shadow:var(--sink)}
+
+.hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:56px;padding:24px 0 64px;min-height:calc(100dvh - 84px)}
+h1{font-size:clamp(40px,5vw,60px);line-height:1.02;letter-spacing:-.035em;font-weight:800;margin:0 0 20px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:clamp(17px,1.6vw,20px);line-height:1.5;color:var(--ink-2);margin:0 0 32px;max-width:520px;text-wrap:pretty}
+
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-bottom:34px}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:58px;padding:0 28px;border-radius:29px;font-size:17px;font-weight:800;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn-primary{color:#fff;background:linear-gradient(145deg,var(--accent-2),var(--accent));box-shadow:var(--glow)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(194,31,26,.42),inset 0 1px 1px rgba(255,255,255,.45)}
+.btn-primary:active{transform:none;box-shadow:0 4px 10px rgba(194,31,26,.35),inset 0 2px 6px rgba(0,0,0,.18)}
+.btn svg{width:20px;height:20px;fill:currentColor}
+.note{font-size:14px;color:var(--ink-2);font-weight:600}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:560px}
+.steps li{padding:14px 14px 16px;border-radius:20px;background:linear-gradient(145deg,var(--hi),var(--lo));box-shadow:var(--lift-sm);display:flex;flex-direction:column;gap:8px}
+.steps .n{width:28px;height:28px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:var(--well);box-shadow:var(--sink);color:var(--accent-ink)}
+.steps li div{display:flex;flex-direction:column;gap:3px}
+.steps b{font-size:15px}
+.steps span{font-size:13px;color:var(--ink-2);line-height:1.4}
+
+/* Phone preview */
+.stage{display:flex;justify-content:center}
+.phone{width:300px;border-radius:46px;padding:12px;background:linear-gradient(145deg,var(--hi),var(--lo));box-shadow:var(--lift),0 40px 60px rgba(120,105,85,.18)}
+.screen{border-radius:36px;background:var(--bg);box-shadow:inset 0 0 0 1px rgba(170,160,145,.25);padding:22px 18px 18px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.eyebrow{text-align:center;font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--ink-2)}
+.dial{align-self:center;width:156px;height:156px;border-radius:78px;background:var(--well);box-shadow:var(--sink);display:flex;align-items:center;justify-content:center}
+.dome{width:126px;height:126px;border-radius:63px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:radial-gradient(circle at 34% 28%,#FFFFFF 0%,#FBFAF7 35%,#EFEBE5 72%,#E1DBD2 100%);box-shadow:7px 9px 16px rgba(140,128,110,.45),-4px -4px 10px rgba(255,255,255,.95)}
+.chip{font-size:8px;font-weight:800;letter-spacing:.06em;color:#fff;background:var(--accent);padding:2px 7px;border-radius:6px}
+.big{font-size:28px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.big sup{font-size:12px}
+.small{font-size:10px;color:var(--ink-2)}
+.grades{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.g{height:46px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:15px;background:linear-gradient(145deg,var(--hi),var(--lo));box-shadow:var(--lift-sm)}
+.g span{font-size:8px;font-weight:700;color:var(--ink-2)}
+.g.on{color:#fff;background:linear-gradient(145deg,var(--accent-2),var(--accent));box-shadow:0 6px 14px rgba(194,31,26,.35)}
+.g.on span{color:rgba(255,255,255,.9)}
+.row{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;border-radius:14px}
+.row.best{background:#fff;box-shadow:var(--lift-sm)}
+.row .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.row .t b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t span{font-size:9px;color:var(--ink-2)}
+.row .p{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+.row .c{width:24px;height:24px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--hi),var(--lo));box-shadow:2px 2px 5px rgba(170,160,145,.45),-2px -2px 5px rgba(255,255,255,.9)}
+.row.best .c{background:linear-gradient(145deg,var(--accent-2),var(--accent));color:#fff;box-shadow:0 4px 8px rgba(194,31,26,.35)}
+.row .c svg{width:11px;height:11px;fill:currentColor}
+.dock{margin-top:4px;height:48px;border-radius:24px;background:rgba(255,255,255,.7);box-shadow:0 8px 20px rgba(140,128,110,.25),inset 0 1px 0 #fff;display:flex;align-items:center;justify-content:space-around;padding:0 4px}
+.dock i{width:40px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;color:var(--ink-2)}
+.dock i.on{width:52px;background:linear-gradient(145deg,var(--accent-2),var(--accent));color:#fff;box-shadow:0 5px 12px rgba(194,31,26,.35)}
+.dock svg{width:17px;height:17px;fill:currentColor}
+
+footer{padding:0 0 32px;font-size:13px;color:var(--ink-2);text-align:center}
+
+@media (max-width:880px){
+  .hero{grid-template-columns:1fr;gap:44px;padding:16px 0 56px;min-height:0;text-align:left}
+  .stage{order:2}
+}
+@media (max-width:560px){
+  .wrap{padding:0 18px}
+  .steps{grid-template-columns:1fr}
+  .steps li{flex-direction:row;align-items:center;gap:12px}
+  .btn{width:100%;justify-content:center}
+  .phone{width:min(300px,100%)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/"><img src="icon.svg" alt="" width="36" height="36">Pumpline</a>
+    <span class="tag">Invite only</span>
+  </header>
+
+  <main class="hero">
+    <section aria-labelledby="h">
+      <h1 id="h">Know the cheapest gas <em>before you pull in.</em></h1>
+      <p class="lede">Pumpline shows prices near you, reads your pump screen from one photo, and keeps a running tab of what you spend on fuel.</p>
+
+      <div class="cta">
+        <!-- Replace with your deployed app URL -->
+        <a class="btn btn-primary" id="open" href="https://pumpline-app.vercel.app">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><path d="M241,69.66,221.66,50.34a8,8,0,0,0-11.32,11.32L229.66,81A8,8,0,0,1,232,86.63V168a8,8,0,0,1-16,0V128a24,24,0,0,0-24-24H176V56a24,24,0,0,0-24-24H72A24,24,0,0,0,48,56V208H32a8,8,0,0,0,0,16H192a8,8,0,0,0,0-16H176V120h16a8,8,0,0,1,8,8v40a24,24,0,0,0,48,0V86.63A23.85,23.85,0,0,0,241,69.66ZM144,120H80a8,8,0,0,1,0-16h64a8,8,0,0,1,0,16Z"/></svg>
+          Get Pumpline
+        </a>
+        <span class="note" id="hint">Free. Works on iPhone and Android.</span>
+      </div>
+
+      <ol class="steps" aria-label="How to install">
+        <li><span class="n">1</span><div><b>Open the app</b><span>Tap Get Pumpline on your phone.</span></div></li>
+        <li><span class="n">2</span><div><b>Add to Home Screen</b><span id="step2">In Safari, tap Share, then Add to Home Screen.</span></div></li>
+        <li><span class="n">3</span><div><b>Sign in</b><span>Use the email you were invited with.</span></div></li>
+      </ol>
+    </section>
+
+    <div class="stage" aria-hidden="true">
+      <div class="phone">
+        <div class="screen">
+          <div class="eyebrow">PRICES NEARBY</div>
+          <div class="dial"><div class="dome"><span class="chip">LOWEST REGULAR</span><span class="big">$3.19<sup>9</sup></span><span class="small">0.8 mi away</span></div></div>
+          <div class="grades"><div class="g on">87<span>Regular</span></div><div class="g">89<span>Plus</span></div><div class="g">93<span>Premium</span></div><div class="g">D<span>Diesel</span></div></div>
+          <div>
+            <div class="row best"><div class="t"><b>Front Range Fuel Co.</b><span>0.8 mi · 14 min ago</span></div><span class="p">$3.19</span><span class="c"><svg viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></span></div>
+            <div class="row"><div class="t"><b>Longs Peak Petroleum</b><span>1.4 mi · 29 min ago</span></div><span class="p">$3.24</span><span class="c"><svg viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></span></div>
+            <div class="row"><div class="t"><b>St. Vrain Express</b><span>2.1 mi · 3 hr ago</span></div><span class="p">$3.29</span><span class="c"><svg viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></span></div>
+          </div>
+          <div class="dock">
+            <i class="on"><svg viewBox="0 0 256 256"><path d="M241,69.66,221.66,50.34a8,8,0,0,0-11.32,11.32L229.66,81A8,8,0,0,1,232,86.63V168a8,8,0,0,1-16,0V128a24,24,0,0,0-24-24H176V56a24,24,0,0,0-24-24H72A24,24,0,0,0,48,56V208H32a8,8,0,0,0,0,16H192a8,8,0,0,0,0-16H176V120h16a8,8,0,0,1,8,8v40a24,24,0,0,0,48,0V86.63A23.85,23.85,0,0,0,241,69.66ZM144,120H80a8,8,0,0,1,0-16h64a8,8,0,0,1,0,16Z"/></svg></i>
+            <i><svg viewBox="0 0 256 256"><path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0V156.69l50.34-50.35a8,8,0,0,1,11.32,0L128,132.69,180.69,80H160a8,8,0,0,1,0-16h40a8,8,0,0,1,8,8v40a8,8,0,0,1-16,0V91.31l-58.34,58.35a8,8,0,0,1-11.32,0L96,123.31l-56,56V200H224A8,8,0,0,1,232,208Z"/></svg></i>
+            <i><svg viewBox="0 0 256 256"><path d="M224,40V80a8,8,0,0,1-16,0V48H176a8,8,0,0,1,0-16h40A8,8,0,0,1,224,40ZM80,208H48V176a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H80a8,8,0,0,0,0-16Zm136-40a8,8,0,0,0-8,8v32H176a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V176A8,8,0,0,0,216,168ZM40,88a8,8,0,0,0,8-8V48H80a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8V80A8,8,0,0,0,40,88ZM80,72h96a8,8,0,0,1,8,8v96a8,8,0,0,1-8,8H80a8,8,0,0,1-8-8V80A8,8,0,0,1,80,72Zm8,96h80V88H88Z"/></svg></i>
+            <i><svg viewBox="0 0 256 256"><path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z"/></svg></i>
+            <i><svg viewBox="0 0 256 256"><path d="M240,112H211.31L168,68.69A15.86,15.86,0,0,0,156.69,64H44.28A16,16,0,0,0,31,71.12L1.34,115.56A8.07,8.07,0,0,0,0,120v48a16,16,0,0,0,16,16H33a32,32,0,0,0,62,0h66a32,32,0,0,0,62,0h17a16,16,0,0,0,16-16V128A16,16,0,0,0,240,112ZM44.28,80H156.69l32,32H23ZM64,192a16,16,0,1,1,16-16A16,16,0,0,1,64,192Zm128,0a16,16,0,1,1,16-16A16,16,0,0,1,192,192Zm48-24H223a32,32,0,0,0-62,0H95a32,32,0,0,0-62,0H16V128H240Z"/></svg></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<footer>Pumpline · Made in Longmont, Colorado</footer>
+
+<script>
+  // Tailor the install step to the visitor's phone.
+  (function () {
+    var ua = navigator.userAgent || "";
+    var step = document.getElementById("step2");
+    var hint = document.getElementById("hint");
+    if (/android/i.test(ua)) {
+      step.textContent = "In Chrome, tap the ⋮ menu, then Add to Home screen.";
+    } else if (!/iphone|ipad|ipod/i.test(ua) && !("ontouchstart" in window)) {
+      hint.textContent = "On a computer? Open this page on your phone to install.";
+    }
+  })();
+</script>
+</body>
+</html>
